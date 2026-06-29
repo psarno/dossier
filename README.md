@@ -10,8 +10,6 @@ This repository is the generalized, open-source version of the engine behind a l
 
 ## Who this is for
 
-This README is written for two audiences:
-
 - **Researchers / investigative journalists** who want to publish a sourced record without touching code - start at [The evidentiary model](#the-evidentiary-model) and [Getting started](#getting-started). You will spend your time in markdown and one JSON file, never in C# or TypeScript.
 
 - **Engineers** evaluating the architecture - start at [Architecture](#architecture). The interesting parts are the zero-downtime database swap, the content-addressed LLM cache, and the SSR hydration model that renders config- and data-driven pages with no client-side flash.
