@@ -29,29 +29,6 @@ This README is written for two audiences. Skip to whichever you are.
 - **One-file reconfiguration** - branding, subject, document labels, tag taxonomy, and the graph hub all live in `research.config.json`, served to the front end at runtime. No rebuild required to change them.
 - **Container-native deploy** - two Dockerfiles, portable to anything that runs containers.
 
----
-
-## Architecture
-
-The system is two deployables that share nothing but an HTTP boundary:
-
-```
-  source-docs/*.md ──upload──▶  ┌─────────────────────────────┐
-                                │  API  (C# / ASP.NET, .NET 10)│
-  research.config.json ───────▶ │                             │
-                                │  parse → enrich → validate   │
-                                │       → atomic swap          │
-                                │                             │
-                                │  SQLite + FTS5   /api/*      │
-                                └──────────────┬──────────────┘
-                                               │ HTTP (server-internal)
-                                ┌──────────────▼──────────────┐
-                                │  Client (Angular 22, SSR)    │
-                                │  Express server → render →   │
-                                │  transfer cache → hydrate    │
-                                └─────────────────────────────┘
-```
-
 ### The ingestion pipeline
 
 The pipeline (`api/Services/PipelineService.cs`) is the heart of the system. An admin uploads markdown; everything downstream is automatic. It is deliberately built so that **a failed or cancelled run cannot corrupt the live site** - the running database is never mutated in place.
