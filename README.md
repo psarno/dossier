@@ -10,7 +10,7 @@ This repository is the generalized, open-source version of the engine behind a l
 
 ## Who this is for
 
-This README is written for two audiences. Skip to whichever you are.
+This README is written for two audiences:
 
 - **Researchers / investigative journalists** who want to publish a sourced record without touching code - start at [The evidentiary model](#the-evidentiary-model) and [Getting started](#getting-started). You will spend your time in markdown and one JSON file, never in C# or TypeScript.
 
