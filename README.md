@@ -2,7 +2,7 @@
 
 **A markdown-to-database pipeline for publishing searchable, evidence-tagged research records with .NET 10, Angular 22 SSR, and SQLite.**
 
-Dossier is built for investigative work: you write structured markdown, the pipeline turns it into a sourced record, and the site presents that record in a searchable interface. This public repo is also intended to show the architecture behind that workflow without pushing the full implementation detail into the top-level README.
+Dossier is built for investigative work: you write structured markdown, the pipeline turns it into a sourced record, and the site presents that record in a searchable interface. 
 
 For the technical implementation details, see [ENGINEERING.md](ENGINEERING.md). For the source-document format, see [source-docs/README.md](source-docs/README.md).
 
