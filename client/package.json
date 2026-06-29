@@ -1,0 +1,42 @@
+{
+  "name": "dossier",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "serve:ssr:dossier": "node dist/dossier/server/server.mjs"
+  },
+  "private": true,
+  "packageManager": "npm@11.11.1",
+  "dependencies": {
+    "@angular/common": "^22.0.4",
+    "@angular/compiler": "^22.0.4",
+    "@angular/core": "^22.0.4",
+    "@angular/forms": "^22.0.4",
+    "@angular/platform-browser": "^22.0.4",
+    "@angular/platform-server": "^22.0.4",
+    "@angular/router": "^22.0.4",
+    "@angular/ssr": "^22.0.4",
+    "@types/d3": "^7.4.3",
+    "d3": "^7.9.0",
+    "express": "^5.1.0",
+    "http-proxy-middleware": "^3.0.0",
+    "marked": "^17.0.4",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.0.4",
+    "@angular/cli": "^22.0.4",
+    "@angular/compiler-cli": "^22.0.4",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.20.0",
+    "jsdom": "^28.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.0.8"
+  }
+}

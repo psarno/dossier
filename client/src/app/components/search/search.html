@@ -1,0 +1,62 @@
+<div class="page-search">
+  <h1>Search</h1>
+
+  <form class="search-form" (ngSubmit)="onSubmit()">
+    <input
+      type="search"
+      class="search-input"
+      placeholder="Search the record…"
+      [(ngModel)]="query"
+      name="q"
+      autofocus
+    />
+    <div class="search-type-toggle">
+      <label>
+        <input type="radio" name="type" value="all" [(ngModel)]="type" /> All
+      </label>
+      <label>
+        <input type="radio" name="type" value="sections" [(ngModel)]="type" /> Summary
+      </label>
+      <label>
+        <input type="radio" name="type" value="entries" [(ngModel)]="type" /> Names
+      </label>
+    </div>
+    <button type="submit" class="search-btn">Search</button>
+  </form>
+
+  @if (loading()) {
+    <div class="loading">Searching…</div>
+  } @else if (searched()) {
+    <div class="search-results">
+      @if (results().length === 0) {
+        <p class="empty-state">No results for "{{ query() }}".</p>
+      } @else {
+        <p class="result-count">{{ results().length }} result{{ results().length !== 1 ? 's' : '' }} for "{{ query() }}"</p>
+
+        @if (sectionResults().length > 0) {
+          <section class="result-group">
+            <h2>Summary Sections ({{ sectionResults().length }})</h2>
+            @for (r of sectionResults(); track r.slug) {
+              <div class="result-item">
+                <a [routerLink]="['/summary', r.slug]" class="result-title">{{ r.title }}</a>
+                <p class="result-snippet" [innerHTML]="r.snippet"></p>
+              </div>
+            }
+          </section>
+        }
+
+        @if (entryResults().length > 0) {
+          <section class="result-group">
+            <h2>Names Index ({{ entryResults().length }})</h2>
+            @for (r of entryResults(); track r.slug) {
+              <div class="result-item">
+                <a [routerLink]="['/names', r.slug]" class="result-title">{{ r.title }}</a>
+                <p class="result-snippet" [innerHTML]="r.snippet"></p>
+              </div>
+            }
+          </section>
+        }
+      }
+    </div>
+  }
+</div>

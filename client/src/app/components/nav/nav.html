@@ -1,0 +1,46 @@
+<nav class="site-nav">
+  <div class="nav-inner">
+    <div class="nav-primary">
+      <a routerLink="/" class="nav-brand">{{ config()?.branding?.navBrand ?? '[Subject]' }}</a>
+      <ul class="nav-links">
+        <li><a routerLink="/summary" routerLinkActive="active">Summary</a></li>
+        <li><a routerLink="/framework" routerLinkActive="active">Framework</a></li>
+        <li><a routerLink="/names" routerLinkActive="active">Names Index</a></li>
+        <li><a routerLink="/sources" routerLinkActive="active">Sources</a></li>
+        <li><a routerLink="/search" routerLinkActive="active">Search</a></li>
+        <li><a routerLink="/connections" routerLinkActive="active">Connections</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-actions">
+      <button
+        type="button"
+        class="theme-toggle"
+        (click)="toggleTheme()"
+        [attr.aria-label]="isDarkTheme() ? 'Switch to light theme' : 'Switch to dark theme'"
+        [attr.title]="isDarkTheme() ? 'Switch to light theme' : 'Switch to dark theme'">
+        <svg *ngIf="!isDarkTheme(); else sunIcon" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M21 12.8A9 9 0 1 1 11.2 3a7.2 7.2 0 0 0 9.8 9.8Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.8" />
+        </svg>
+
+        <ng-template #sunIcon>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.25" fill="none" stroke="currentColor" stroke-width="1.8" />
+            <path
+              d="M12 2.5v2.25M12 19.25v2.25M21.5 12h-2.25M4.75 12H2.5M18.72 5.28l-1.6 1.6M6.88 17.12l-1.6 1.6M18.72 18.72l-1.6-1.6M6.88 6.88l-1.6-1.6"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="1.8" />
+          </svg>
+        </ng-template>
+      </button>
+    </div>
+  </div>
+</nav>

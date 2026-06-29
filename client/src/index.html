@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>[Subject] — A Documented Record</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- TODO: replace favicon per-subject (see README) -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script>
+    (() => {
+      const storageKey = 'dossier-theme';
+      const root = document.documentElement;
+      const storedTheme = localStorage.getItem(storageKey);
+      const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
+
+      root.setAttribute('data-theme', theme);
+    })();
+  </script>
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>

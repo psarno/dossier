@@ -1,0 +1,28 @@
+<div class="page-section-detail">
+  <nav class="breadcrumb">
+    <a routerLink="/summary">Summary</a> /
+    @if (section()) { <span>{{ section()!.title }}</span> }
+  </nav>
+
+  @if (loading()) {
+    <div class="loading">Loading…</div>
+  } @else if (notFound()) {
+    <div class="not-found">
+      <h1>Section not found</h1>
+      <a routerLink="/summary">Back to Summary</a>
+    </div>
+  } @else if (section(); as s) {
+    <article class="section-article">
+      <header class="section-header">
+        <h1>{{ s.title }}</h1>
+        <div class="section-meta">
+          @for (tag of tags(); track tag) {
+            <span class="tag {{ tagClass(tag) }}">{{ tagLabel(tag) }}</span>
+          }
+        </div>
+      </header>
+
+      <div class="section-body markdown-content" [innerHTML]="s.body | safeHtml"></div>
+    </article>
+  }
+</div>

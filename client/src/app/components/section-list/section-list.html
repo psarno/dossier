@@ -1,0 +1,51 @@
+<div class="page-section-list">
+  <div class="page-header">
+    <h1>Summary Document</h1>
+    <a routerLink="/search" class="search-link">Search →</a>
+  </div>
+
+  @if (allTags().length > 0) {
+    <div class="tag-filter">
+      <span class="filter-label">Filter by tag:</span>
+      @for (tag of allTags(); track tag) {
+        <button
+          class="tag {{ tagClass(tag) }}"
+          [class.active]="activeTag() === tag"
+          (click)="setTag(tag)"
+        >{{ tagLabel(tag) }}</button>
+      }
+      @if (activeTag()) {
+        <button class="clear-filter" (click)="setTag('')">Clear</button>
+      }
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading">Loading sections…</div>
+  } @else {
+    <ol class="section-list">
+      @for (section of filteredSections(); track section.slug) {
+        <li class="section-item">
+          @if (section.sortOrder === 0) {
+            <span class="section-doc-title">{{ section.title }}</span>
+          } @else {
+            <a [routerLink]="['/summary', section.slug]" class="section-link">
+              <span class="section-title">{{ section.title }}</span>
+              <span class="section-tags">
+                @for (tag of parseTags(section.tagsPresent); track tag) {
+                  <span class="tag {{ tagClass(tag) }}">{{ tagLabel(tag) }}</span>
+                }
+              </span>
+            </a>
+          }
+        </li>
+      }
+    </ol>
+
+    @if (sections().length === 0) {
+      <p class="empty-state">No sections available.</p>
+    } @else if (filteredSections().length === 0) {
+      <p class="empty-state">No sections match the selected filter.</p>
+    }
+  }
+</div>

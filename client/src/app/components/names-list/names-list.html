@@ -1,0 +1,65 @@
+<div class="page-names-list">
+  <div class="page-header">
+    <h1>Names Index</h1>
+    <a routerLink="/search" class="search-link">Search →</a>
+  </div>
+
+  <div class="names-filter">
+    <input
+      type="search"
+      placeholder="Filter by name…"
+      [value]="filterText()"
+      (input)="setFilter($any($event.target).value)"
+      class="name-search-input"
+    />
+    <div class="tier-toggle">
+      <button [class.active]="activeTier() === null" (click)="activeTier.set(null)">All</button>
+      <button [class.active]="activeTier() === 1" (click)="activeTier.set(1)">Tier 1</button>
+      <button [class.active]="activeTier() === 2" (click)="activeTier.set(2)">Tier 2</button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">Loading names…</div>
+  } @else {
+    @if (tier1().length > 0 && (activeTier() === null || activeTier() === 1)) {
+      <section class="tier-section">
+        <h2 class="tier-heading">
+          Tier 1 — Profiled Individuals
+          <span class="count">{{ tier1().length }}</span>
+        </h2>
+        <p class="tier-desc">Each entry includes a description and cross-references to summary sections.</p>
+        <ul class="names-grid">
+          @for (entry of tier1(); track entry.slug) {
+            <li>
+              <a [routerLink]="['/names', entry.slug]" class="name-link">{{ entry.name }}</a>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    @if (tier2().length > 0 && (activeTier() === null || activeTier() === 2)) {
+      <section class="tier-section tier-2">
+        <h2 class="tier-heading">
+          Tier 2 — Research Queue
+          <span class="count">{{ tier2().length }}</span>
+        </h2>
+        <p class="tier-desc">Names that have surfaced in primary documents. Role not yet sufficiently established for main summary.</p>
+        <ul class="names-grid">
+          @for (entry of tier2(); track entry.slug) {
+            <li>
+              <a [routerLink]="['/names', entry.slug]" class="name-link tier-2-link">{{ entry.name }}</a>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    @if (entries().length === 0) {
+      <p class="empty-state">No entries available.</p>
+    } @else if (filtered().length === 0 && filterText()) {
+      <p class="empty-state">No names match "{{ filterText() }}".</p>
+    }
+  }
+</div>

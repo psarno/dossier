@@ -1,0 +1,159 @@
+<div class="page-home">
+  <header class="home-header">
+    <h1>[Subject] — A Documented Record</h1>
+    <div class="home-subtitle">
+      Primary-source analysis of the public record.</div>
+      <div class="home-subtitle">Not journalism. Every claim carries a source and an evidentiary tag.</div>
+
+      @if (metadata(); as meta) {
+      <div class="version-badges">
+        @if (meta['built_at']) {
+          <span class="built-at">Updated {{ meta['built_at'] | date:'mediumDate' }}</span>
+        }
+      </div>
+    }
+  </header>
+
+  <div class="home-grid">
+    <a routerLink="/summary" class="home-card">
+      <h2>{{ config()?.documents?.[0]?.label ?? 'Summary Document' }}</h2>
+      <p>
+        The full investigative record — organized by theme and tagged by evidentiary weight.
+      </p>
+      <span class="card-cta">Read the Summary →</span>
+    </a>
+
+    <a routerLink="/names" class="home-card">
+      <h2>{{ config()?.documents?.[1]?.label ?? 'Names Index' }}</h2>
+      <p>
+        Every significant named individual in the record. Tier 1: profiled with cross-references.
+        Tier 2: names from primary documents whose role is not yet established.
+      </p>
+      <span class="card-cta">Browse the Index →</span>
+    </a>
+
+    <a routerLink="/framework" class="home-card">
+      <h2>{{ config()?.documents?.[2]?.label ?? 'Analytical Framework' }}</h2>
+      <p>
+        The interpretive layer built from the evidentiary record itself.
+        Structural synthesis across the summary and names index, presented as a standalone companion document.
+      </p>
+      <span class="card-cta">Read the Framework →</span>
+    </a>
+
+    <a routerLink="/search" class="home-card">
+      <h2>Full-Text Search</h2>
+      <p>
+        Search across both the summary and the names index simultaneously.
+        Filter by document type.
+      </p>
+      <span class="card-cta">Search the Record →</span>
+    </a>
+
+    <a routerLink="/connections" class="home-card home-card-connections">
+      <div class="connections-card-content">
+        <div class="connections-card-text">
+          <h2>Network Map</h2>
+          <p>
+            An interactive force-directed graph of every documented relationship in the record —
+            individuals, institutions, and intelligence connections rendered as a live network.
+            Pan, zoom, and explore the structure of the network.
+          </p>
+          <span class="card-cta">Explore the Network →</span>
+        </div>
+        <div class="connections-card-graphic" aria-hidden="true">
+          <svg width="160" height="110" viewBox="0 0 160 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- edges -->
+            <line x1="10" y1="35" x2="30" y2="56" stroke="#334155" stroke-width="0.75"/>
+            <line x1="10" y1="35" x2="50" y2="10" stroke="#334155" stroke-width="0.75"/>
+            <line x1="50" y1="10" x2="30" y2="56" stroke="#334155" stroke-width="1"/>
+            <line x1="50" y1="10" x2="80" y2="20" stroke="#334155" stroke-width="1"/>
+            <line x1="30" y1="56" x2="80" y2="20" stroke="#475569" stroke-width="1.5"/>
+            <line x1="80" y1="20" x2="130" y2="35" stroke="#475569" stroke-width="1.5"/>
+            <line x1="130" y1="35" x2="150" y2="65" stroke="#334155" stroke-width="1"/>
+            <line x1="150" y1="65" x2="120" y2="86" stroke="#334155" stroke-width="1"/>
+            <line x1="130" y1="35" x2="120" y2="86" stroke="#475569" stroke-width="1.5"/>
+            <line x1="120" y1="86" x2="70" y2="96" stroke="#475569" stroke-width="1.5"/>
+            <line x1="70" y1="96" x2="30" y2="56" stroke="#475569" stroke-width="1.5"/>
+            <line x1="30" y1="56" x2="130" y2="35" stroke="#334155" stroke-width="1"/>
+            <line x1="80" y1="20" x2="120" y2="86" stroke="#334155" stroke-width="1"/>
+            <line x1="70" y1="96" x2="130" y2="35" stroke="#334155" stroke-width="1"/>
+            <line x1="80" y1="20" x2="70" y2="96" stroke="#1e293b" stroke-width="0.75"/>
+            <!-- peripheral nodes -->
+            <circle cx="10" cy="35" r="2.5" fill="#334155"/>
+            <circle cx="50" cy="10" r="3" fill="#475569"/>
+            <circle cx="150" cy="65" r="3" fill="#475569"/>
+            <!-- main nodes -->
+            <circle cx="30" cy="56" r="5" fill="#64748b"/>
+            <circle cx="80" cy="20" r="8" fill="#94a3b8"/>
+            <circle cx="130" cy="35" r="5.5" fill="#64748b"/>
+            <circle cx="120" cy="86" r="6.5" fill="#94a3b8"/>
+            <circle cx="70" cy="96" r="4.5" fill="#64748b"/>
+          </svg>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <section class="tag-legend">
+    <h3>Evidentiary Tag Key</h3>
+    <p class="legend-intro">
+      Every claim carries one of these tags. The tags describe the evidentiary basis —
+      not the researcher's opinion.
+    </p>
+    <div class="legend-grid">
+      @if (config()?.tags; as tags) {
+        @for (tag of tags; track tag.key) {
+          <div class="legend-item">
+            <span class="tag tag-{{ tagCssClass(tag.key) }}">{{ tag.label }}</span>
+            <span>{{ tag.description }}</span>
+          </div>
+        }
+      } @else {
+        <div class="legend-item">
+          <span class="tag tag-confirmed">Confirmed</span>
+          <span>In the documents, court records, or official filings. Verifiable primary source.</span>
+        </div>
+        <div class="legend-item">
+          <span class="tag tag-corroborated">Corroborated</span>
+          <span>Evaluated as credible by trained federal investigators across multiple reviews. A distinct legal/investigative category.</span>
+        </div>
+        <div class="legend-item">
+          <span class="tag tag-documented-claim">Documented Claim</span>
+          <span>Stated in official documents (deposition, sworn testimony, filing) but not independently corroborated.</span>
+        </div>
+        <div class="legend-item">
+          <span class="tag tag-govt-action">Confirmed Govt Action</span>
+          <span>A government action is confirmed even where underlying motive is unknown.</span>
+        </div>
+        <div class="legend-item">
+          <span class="tag tag-anomalous">Anomalous</span>
+          <span>A confirmed fact that is procedurally or legally extraordinary on its face. The anomaly is observable in the record itself.</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="home-purpose">
+    <h3>Why This Record Exists</h3>
+    <p class="purpose-statement">
+      This record exists to make a large, scattered body of public documents navigable. The goal is a public record that is too well-sourced to ignore and too organized to bury — every claim traceable to a primary source, and every source weighted by how firmly it is established.
+    </p>
+    <p class="source-note">
+      Everything here is drawn from public, primary-source material — organized and cross-referenced, not leaked. This site exists to make a complex record navigable.
+    </p>
+  </section>
+
+  <section class="home-methodology">
+    <h3>About This Document</h3>
+    <p>
+      Compiled through primary-source analysis of the public record on [Subject]. An item enters the record only when a specific source supports it and the underlying claim can be verified against that source. Rumor and speculation are excluded. The tagging system makes the evidentiary weight of every claim visible at a glance, without re-deriving it on each read.
+    </p>
+    <p>
+      The tag <span class="tag tag-confirmed">Confirmed</span> means the underlying primary source was reviewed directly.
+    </p>
+    <p>
+      <a href="mailto:{{ config()?.branding?.contactEmail ?? 'contact@example.org' }}">{{ config()?.branding?.contactEmail ?? 'contact@example.org' }}</a>
+    </p>
+  </section>
+</div>

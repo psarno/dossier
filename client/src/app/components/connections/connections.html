@@ -1,0 +1,92 @@
+@if (loading()) {
+  <div class="graph-overlay">
+    <div class="graph-spinner">
+      <div class="spinner-ring"></div>
+      <p>Loading relationship graph…</p>
+    </div>
+  </div>
+} @else if (error()) {
+  <div class="graph-overlay">
+    <div class="graph-error">
+      <h3>Graph unavailable</h3>
+      <p>{{ error() }}</p>
+    </div>
+  </div>
+} @else {
+  <div class="graph-controls">
+    <input
+      class="ctrl-search"
+      type="text"
+      placeholder="Search nodes…"
+      [value]="searchQuery()"
+      (input)="onSearch($event)"
+    />
+    <select class="ctrl-select" [value]="filterWeight()" (change)="onWeightFilter($event)">
+      <option value="">All evidence</option>
+      <option value="CONFIRMED">Confirmed</option>
+      <option value="CORROBORATED">Corroborated</option>
+      <option value="DOCUMENTED_CLAIM">Documented Claim</option>
+      <option value="CONFIRMED_GOVT_ACTION">Govt Action</option>
+      <option value="ANOMALOUS">Anomalous</option>
+    </select>
+    <select class="ctrl-select" [value]="filterType()" (change)="onTypeFilter($event)">
+      <option value="">All types</option>
+      <option value="person">Person</option>
+      <option value="institution">Institution</option>
+      <option value="location">Location</option>
+      <option value="event">Event</option>
+      <option value="fund">Fund</option>
+    </select>
+    <label class="ctrl-check">
+      <input
+        type="checkbox"
+        [checked]="showTier2()"
+        (change)="showTier2.set($any($event.target).checked)"
+      />
+      Tier 2
+    </label>
+    <button class="ctrl-btn" (click)="resetView()">Reset</button>
+    <span class="ctrl-counts">{{ nodeCount() }} nodes · {{ edgeCount() }} edges · <span style="color: #60a5fa;">Drag, then hold Ctrl to pin</span></span>
+  </div>
+
+  <div class="graph-canvas">
+    <svg #graphSvg class="graph-svg"></svg>
+
+    <div class="graph-legend">
+      @for (item of legendItems; track item.weight) {
+        <div class="legend-item">
+          <span class="legend-swatch" [style.background]="item.color"></span>
+          <span class="legend-label">{{ item.label }}</span>
+        </div>
+      }
+    </div>
+
+    @if (selectedNode(); as node) {
+      <div class="info-panel">
+        <div class="info-name">{{ node.name }}</div>
+        <div class="info-meta">
+          {{ node.type }}
+          <span class="info-tier" [class.tier-1]="node.tier === 1" [class.tier-2]="node.tier === 2">
+            · Tier {{ node.tier }}
+          </span>
+        </div>
+        @if (node.tags.length > 0) {
+          <div class="info-tags">
+            @for (tag of node.tags; track tag) {
+              <span class="info-tag">{{ tag }}</span>
+            }
+          </div>
+        }
+        @if (node.notes) {
+          <p class="info-notes">{{ node.notes }}</p>
+        }
+        <div class="info-actions">
+          <button class="info-btn" (click)="toggleEgoMode()">
+            {{ egoMode() ? 'Show full graph' : 'Show only connections' }}
+          </button>
+          <button class="info-btn-secondary" (click)="clearSelection()">Close</button>
+        </div>
+      </div>
+    }
+  </div>
+}

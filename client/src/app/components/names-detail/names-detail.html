@@ -1,0 +1,49 @@
+<div class="page-names-detail">
+  <nav class="breadcrumb">
+    <a routerLink="/names">Names Index</a> /
+    @if (entry()) { <span>{{ entry()!.name }}</span> }
+  </nav>
+
+  @if (loading()) {
+    <div class="loading">Loading…</div>
+  } @else if (notFound()) {
+    <div class="not-found">
+      <h1>Entry not found</h1>
+      <a routerLink="/names">Back to Names Index</a>
+    </div>
+  } @else if (entry(); as e) {
+    <article class="entry-article">
+      <header class="entry-header">
+        <h1>{{ e.name }}</h1>
+        <div class="entry-meta">
+          <span class="tier-badge tier-{{ e.tier }}">Tier {{ e.tier }}</span>
+        </div>
+      </header>
+
+      <div class="entry-body markdown-content" [innerHTML]="e.description | safeHtml"></div>
+
+      @if (sectionRefs().length > 0) {
+        <aside class="section-refs">
+          <h3>Appears in summary sections</h3>
+          <ul>
+            @for (ref of sectionRefs(); track ref) {
+              <li><a [routerLink]="['/summary', ref]">{{ sectionTitle(ref) }}</a></li>
+            }
+          </ul>
+        </aside>
+      }
+
+      @if (searchDone() && summaryHits().length > 0) {
+        <section class="summary-hits">
+          <h3>Mentioned in summary ({{ summaryHits().length }} section{{ summaryHits().length !== 1 ? 's' : '' }})</h3>
+          @for (r of summaryHits(); track r.slug) {
+            <div class="result-item">
+              <a [routerLink]="['/summary', r.slug]" class="result-title">{{ r.title }}</a>
+              <p class="result-snippet" [innerHTML]="r.snippet"></p>
+            </div>
+          }
+        </section>
+      }
+    </article>
+  }
+</div>

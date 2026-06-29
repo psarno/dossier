@@ -1,0 +1,62 @@
+{
+  "subject": "your research subject",
+  "branding": {
+    "siteTitle": "[Subject] — A Documented Record",
+    "navBrand": "[Subject]",
+    "tagline": "Primary-source analysis of the public record.",
+    "contactEmail": "contact@example.org",
+    "domain": "example.org"
+  },
+  "centralNode": {
+    "id": "subject-slug",
+    "aliases": ["Alt Name", "Another Name"]
+  },
+  "documents": [
+    {
+      "type": "summary",
+      "label": "Summary Document",
+      "route": "/summary"
+    },
+    {
+      "type": "names",
+      "label": "Names Index",
+      "route": "/names"
+    },
+    {
+      "type": "framework",
+      "label": "Analytical Framework",
+      "route": "/framework"
+    }
+  ],
+  "tags": [
+    {
+      "key": "CONFIRMED",
+      "label": "Confirmed",
+      "description": "In the documents, court records, or official filings. Verifiable primary source."
+    },
+    {
+      "key": "CORROBORATED",
+      "label": "Corroborated",
+      "description": "Evaluated as credible by trained federal investigators across multiple reviews. A distinct legal/investigative category."
+    },
+    {
+      "key": "DOCUMENTED CLAIM",
+      "label": "Documented Claim",
+      "description": "Stated in official documents (deposition, sworn testimony, filing) but not independently corroborated."
+    },
+    {
+      "key": "CONFIRMED GOVT ACTION",
+      "label": "Confirmed Govt Action",
+      "description": "A government action is confirmed even where underlying motive is unknown."
+    },
+    {
+      "key": "ANOMALOUS",
+      "label": "Anomalous",
+      "description": "A confirmed fact that is procedurally or legally extraordinary on its face. The anomaly is observable in the record itself."
+    }
+  ],
+  "sourceCitation": {
+    "enabled": true,
+    "label": "Source"
+  }
+}

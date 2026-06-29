@@ -1,0 +1,32 @@
+# .NET
+api/bin/
+api/obj/
+*.user
+*.suo
+.vs/
+
+# Angular / Node
+client/node_modules/
+client/dist/
+client/.angular/
+
+# SQLite databases (populated at runtime, not source-controlled)
+*.db
+*.db-shm
+*.db-wal
+.localdata/
+
+# Environment / secrets
+.env
+.env.*
+appsettings.*.json
+!appsettings.json
+research.config.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/

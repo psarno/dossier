@@ -1,0 +1,130 @@
+<div class="page-section-detail page-sources">
+  <nav class="breadcrumb">
+    <a routerLink="/">Home</a> /
+    <span>Sources</span>
+  </nav>
+
+  @if (loading()) {
+    <div class="loading">Loading sources…</div>
+  } @else if (notFound()) {
+    <div class="not-found">
+      <h1>Sources not available</h1>
+      <p>The sources catalog is currently unavailable.</p>
+    </div>
+  } @else {
+    <div class="page-header">
+      <h1>Sources</h1>
+      @if (summary(); as r) {
+        <div class="built-at">Generated {{ r.generatedAt }}</div>
+      }
+    </div>
+
+    @if (summary(); as r) {
+      <section class="sources-intro">
+        <p class="sources-subtitle">
+          Generated from the summary and names documents. This page lists the source materials referenced across the site, grouped by type and linked back to the relevant summary sections.
+        </p>
+        <div class="version-badges">
+          <span class="version-badge">Summary {{ r.summaryVersion }}</span>
+          <span class="version-badge">Names {{ r.namesVersion }}</span>
+          <span class="version-badge">{{ r.totals.parsedItems }} cataloged sources</span>
+        </div>
+      </section>
+
+      <section class="sources-controls">
+        <label class="sources-search">
+          <span class="sources-search-label">Search sources</span>
+          <input
+            type="search"
+            class="sources-search-input"
+            [ngModel]="searchQuery()"
+            (ngModelChange)="updateSearch($event)"
+            placeholder="Search titles, notes, sections"
+          />
+        </label>
+        <div class="sources-controls-meta">
+          <span class="version-badge">{{ totalVisibleItems() }} visible</span>
+          @if (searchLoading()) {
+            <span class="sources-inline-loading">
+              <span class="sources-spinner" aria-hidden="true"></span>
+              Searching…
+            </span>
+          }
+          @if (searchQuery()) {
+            <button type="button" class="clear-filter" (click)="clearSearch()">Clear</button>
+          }
+        </div>
+      </section>
+
+      @if (filteredGroups().length === 0) {
+        <div class="not-found">
+          <h2>No matching sources</h2>
+          <p>Try a different search term.</p>
+        </div>
+      }
+
+      @for (group of filteredGroups(); track group.key) {
+        <section class="sources-group">
+          <button type="button" class="sources-group-toggle" (click)="toggleGroup(group)">
+            <div>
+              <h2>{{ group.label }}</h2>
+              <p>{{ group.itemCount }} source{{ group.itemCount === 1 ? '' : 's' }}</p>
+            </div>
+            <span class="sources-group-toggle-icon" [class.is-open]="isGroupExpanded(group.key)">▾</span>
+          </button>
+
+          @if (isGroupExpanded(group.key)) {
+            @if (isGroupLoading(group.key)) {
+              <div class="sources-group-loading">
+                <span class="sources-spinner" aria-hidden="true"></span>
+                Loading {{ group.label.toLowerCase() }}…
+              </div>
+            } @else {
+              <div class="sources-list">
+                @for (item of groupItems(group.key); track item.type + ':' + item.normalizedLabel) {
+                <article class="source-card">
+                  <header class="source-card-header">
+                    <h3 [innerHTML]="displayLabel(item) | safeHtml:'inline'"></h3>
+                    @if (item.type === 'legal') {
+                      <span class="tag tag-govt-action">Legal</span>
+                    } @else if (item.type === 'government') {
+                      <span class="tag tag-status">Government</span>
+                    } @else if (item.type === 'journalism') {
+                      <span class="tag tag-status">Journalism</span>
+                    } @else if (item.type === 'social') {
+                      <span class="tag tag-status">Social</span>
+                    }
+                  </header>
+
+                  @if (displayNote(item); as note) {
+                    <div class="source-note markdown-content" [innerHTML]="note | safeHtml"></div>
+                  }
+
+                  @if (displayDateText(item); as dateText) {
+                    <p class="source-meta" [innerHTML]="dateText | safeHtml:'inline'"></p>
+                  }
+
+                  @if (displayOccurrenceSummary(item); as occurrenceText) {
+                    <p class="source-meta" [innerHTML]="occurrenceText | safeHtml:'inline'"></p>
+                  }
+
+                  @if (dedupedSectionRefs(item).length > 0) {
+                    <div class="source-links">
+                      <span class="source-links-label">Cited in:</span>
+                      <ul class="source-links-list">
+                        @for (ref of dedupedSectionRefs(item); track ref.slug) {
+                          <li><a [routerLink]="['/summary', ref.slug]" [innerHTML]="displaySectionTitle(ref.title) | safeHtml:'inline'"></a></li>
+                        }
+                      </ul>
+                    </div>
+                  }
+                </article>
+                }
+              </div>
+            }
+          }
+        </section>
+      }
+    }
+  }
+</div>

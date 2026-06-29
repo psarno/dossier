@@ -1,0 +1,26 @@
+<div class="page-framework">
+  <nav class="breadcrumb">
+    <a routerLink="/">Home</a> /
+    <span>Analytical Framework</span>
+  </nav>
+
+  @if (loading()) {
+    <div class="loading">Loading…</div>
+  } @else if (notFound()) {
+    <div class="not-found">
+      <h1>Analytical framework not found</h1>
+      <p>Run the pipeline with `analytical_framework_v1.md` uploaded as the optional framework document.</p>
+    </div>
+  } @else if (framework(); as doc) {
+    <article class="section-article">
+      <header class="section-header">
+        <h1>{{ doc.title }}</h1>
+        <div class="section-meta">
+          <span class="tag tag-status">Framework {{ doc.docVersion }}</span>
+        </div>
+      </header>
+
+      <div class="section-body markdown-content" [innerHTML]="doc.body | safeHtml"></div>
+    </article>
+  }
+</div>

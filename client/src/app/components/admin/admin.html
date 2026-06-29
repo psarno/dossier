@@ -1,0 +1,161 @@
+<div class="page-admin">
+  <h1>Admin</h1>
+
+  @if (!authenticated()) {
+    <section class="admin-auth">
+      <label for="adminKey">Admin Key</label>
+      <input
+        id="adminKey"
+        type="password"
+        [formField]="authForm.adminKey"
+        placeholder="Enter admin key"
+        class="admin-input"
+        (keydown.enter)="authenticate()"
+      />
+      <button (click)="authenticate()" class="btn-primary" [disabled]="authenticating()">
+        {{ authenticating() ? 'Authenticating…' : 'Authenticate' }}
+      </button>
+      @if (error()) {
+        <p class="error-message">{{ error() }}</p>
+      }
+    </section>
+
+    <section class="pipeline-logs">
+      <h2>API Connectivity Diagnostics</h2>
+      <p style="font-size:0.85rem;margin:0 0 0.75rem">Tests whether this server can reach the C# API backend. Run this first if authentication is failing.</p>
+      <button (click)="testConnectivity()" class="btn-secondary">Test API Connectivity</button>
+      @if (diagResult()) {
+        <pre class="log-output" style="margin-top:0.75rem">{{ diagResult() }}</pre>
+      }
+    </section>
+  }
+
+  @if (authenticated()) {
+    <div class="admin-authenticated">
+      <div class="admin-session-bar">
+        <span class="admin-session-label">Authenticated</span>
+        <button (click)="deauthenticate()" class="btn-secondary btn-sm">Sign out</button>
+      </div>
+
+      @if (status(); as s) {
+        <section class="admin-status">
+          <h2>Current State</h2>
+          <dl class="status-grid">
+            <dt>Summary version</dt><dd>{{ s.currentSummaryVersion ?? '—' }}</dd>
+            <dt>Names version</dt><dd>{{ s.currentNamesVersion ?? '—' }}</dd>
+            <dt>Framework version</dt><dd>{{ s.currentFrameworkVersion ?? '—' }}</dd>
+            <dt>Built at</dt><dd>{{ s.builtAt ?? '—' }}</dd>
+            <dt>Pipeline</dt><dd>{{ s.isRunning ? 'Running…' : 'Idle' }}</dd>
+            @if (s.lastRunAt) {
+              <dt>Last run</dt><dd>{{ s.lastRunAt }}</dd>
+            }
+          </dl>
+          <button (click)="rollback()" class="btn-danger">Rollback to Previous Version</button>
+        </section>
+      }
+
+      <section class="pipeline-logs">
+        <h2>Connectivity Diagnostics</h2>
+        <p style="font-size:0.85rem;margin:0 0 0.75rem">Tests whether the Node SSR server can reach the C# API backend directly.</p>
+        <button (click)="testConnectivity()" class="btn-secondary">Test API Connectivity</button>
+        @if (diagResult()) {
+          <pre class="log-output" style="margin-top:0.75rem">{{ diagResult() }}</pre>
+        }
+      </section>
+
+      <section class="admin-upload">
+        <h2>Upload & Run Pipeline</h2>
+        <p class="upload-desc">
+          Upload summary and names together when updating the evidentiary record.
+          The analytical framework can be uploaded either alongside them or by itself, and bypasses AI.
+          The pipeline validates and atomically swaps the database.
+          The live site is unchanged on failure.
+        </p>
+
+        <div class="file-inputs">
+          <label>
+            Summary document (.md)
+            <input type="file" accept=".md" (change)="onSummaryFile($event)" />
+          </label>
+          <label>
+            Names index (.md)
+            <input type="file" accept=".md" (change)="onNamesFile($event)" />
+          </label>
+          <label>
+            Analytical framework (.md, optional)
+            <input type="file" accept=".md" (change)="onFrameworkFile($event)" />
+          </label>
+        </div>
+
+        <label class="checkbox-label">
+          <input type="checkbox" [formField]="uploadForm.generateGraph" />
+          Regenerate connections graph (slow — ~7 min)
+        </label>
+
+        <div class="pipeline-actions">
+          <button (click)="upload()" class="btn-primary" [disabled]="running() || uploadForm().invalid()">
+            {{ running() ? 'Running…' : 'Upload & Run Pipeline' }}
+          </button>
+          @if (running()) {
+            <button (click)="cancelPipeline()" class="btn-danger btn-sm">Cancel</button>
+          }
+        </div>
+
+        @for (err of uploadForm().errors(); track err.kind) {
+          <p class="status-message">{{ err.message }}</p>
+        }
+
+        @if (message()) {
+          <p class="status-message">{{ message() }}</p>
+        }
+        @if (error()) {
+          <p class="error-message">{{ error() }}</p>
+        }
+      </section>
+
+      @if (logs().length > 0) {
+        <section class="pipeline-logs">
+          <h2>Pipeline Log <button (click)="loadLogs()" class="btn-secondary btn-sm">Refresh</button></h2>
+          <pre class="log-output">@for (entry of logs(); track $index) {<span [class]="'log-' + entry.level.toLowerCase()">{{ entry.timestamp }} [{{ entry.level }}] {{ entry.message }}
+</span>}</pre>
+        </section>
+      }
+
+      @if (result(); as r) {
+        <section class="pipeline-result" [class.success]="r.success" [class.failure]="!r.success">
+          <h2>Pipeline {{ r.success ? 'Succeeded' : 'Failed' }}</h2>
+          <dl class="status-grid">
+            <dt>Summary version</dt><dd>{{ r.summaryVersion }}</dd>
+            <dt>Names version</dt><dd>{{ r.namesVersion }}</dd>
+            <dt>Framework version</dt><dd>{{ r.frameworkVersion }}</dd>
+            <dt>Sections</dt><dd>{{ r.sectionCount }}</dd>
+            <dt>Entries</dt><dd>{{ r.entryCount }}</dd>
+            <dt>Elapsed</dt><dd>{{ r.elapsedSeconds | number:'1.1-1' }}s</dd>
+          </dl>
+
+          @if (r.errors.length > 0) {
+            <div class="result-errors">
+              <h3>Errors</h3>
+              <ul>
+                @for (err of r.errors; track err) {
+                  <li>{{ err }}</li>
+                }
+              </ul>
+            </div>
+          }
+
+          @if (r.warnings.length > 0) {
+            <div class="result-warnings">
+              <h3>Warnings</h3>
+              <ul>
+                @for (w of r.warnings; track w) {
+                  <li>{{ w }}</li>
+                }
+              </ul>
+            </div>
+          }
+        </section>
+      }
+    </div>
+  }
+</div>
